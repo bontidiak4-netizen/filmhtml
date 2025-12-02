@@ -15,3 +15,53 @@ const movies = [
   {"id":14,"title":"Gladiátor","year":2000,"genre":"Akció"},
   {"id":15,"title":"Toy Story","year":1995,"genre":"Animáció"}
 ];
+let favorites = [];
+
+function renderMovies() {
+    const list = document.getElementById('movie-list');
+    list.innerHTML = '';
+    movies.forEach(movie => {
+        if (favorites.find(fav => fav.id === movie.id)) return;
+        const li = document.createElement('li');
+        li.textContent = `${movie.title} (${movie.year}) [${movie.genre}] `;
+        const btn = document.createElement('button');
+        btn.textContent = 'Kedvenc';
+        btn.onclick = () => addToFavorites(movie.id);
+        li.appendChild(btn);
+        list.appendChild(li);
+    });
+}
+
+function renderFavorites() {
+    const list = document.getElementById('favorites-list');
+    list.innerHTML = '';
+    favorites.forEach(movie => {
+        const li = document.createElement('li');
+        li.textContent = `${movie.title} (${movie.year}) [${movie.genre}] `;
+        const btn = document.createElement('button');
+        btn.textContent = 'Eltávolít';
+        btn.onclick = () => removeFromFavorites(movie.id);
+        li.appendChild(btn);
+        list.appendChild(li);
+    });
+}
+
+function addToFavorites(id) {
+    const movie = movies.find(m => m.id === id);
+    if (movie && !favorites.find(fav => fav.id === id)) {
+        favorites.push(movie);
+        renderMovies();
+        renderFavorites();
+    }
+}
+
+function removeFromFavorites(id) {
+    favorites = favorites.filter(fav => fav.id !== id);
+    renderMovies();
+    renderFavorites();
+}
+
+window.onload = function() {
+    renderMovies();
+    renderFavorites();
+};
